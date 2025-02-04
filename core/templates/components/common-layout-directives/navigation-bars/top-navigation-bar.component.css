@@ -109,6 +109,10 @@
   display: flex;
 }
 
+.oppia-top-navigation-bar .oppia-navbar-back-button{
+  margin-right: 9px;
+  margin-top: 10px;
+}
 .oppia-top-navigation-bar .top-section .heading-text {
   display: inline-block;
   margin-left: 7px;

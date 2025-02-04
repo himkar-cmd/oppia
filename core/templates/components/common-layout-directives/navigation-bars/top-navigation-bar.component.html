@@ -1,5 +1,5 @@
 <div class="navbar-header e2e-test-navbar-header oppia-top-navigation-bar">
-  <a *ngIf="windowIsNarrow && !pageIsIframed"
+  <a *ngIf="windowIsNarrow && !pageIsIframed && isBlogPostPage()"
      (click)="toggleSidebar($event)"
      class="navbar-brand oppia-navbar-menu oppia-transition-200 e2e-mobile-test-navbar-button ml-0"
      tabindex="0">
@@ -12,6 +12,10 @@
        [ngClass]="{ 'oppia-stop-scroll': isSidebarShown() }" >
        &#10005;
     </i>
+  </a>
+  <a
+    href = "/blog" class="oppia-blog-post-back-button e2e-test-back-button" *ngIf="!isBlogPostPage()">
+    <i class="fas fa-arrow-left oppia-navbar-back-button">
   </a>
   <div class="oppia-navbar-brand-name oppia-transition-200 e2e-test-oppia-main-logo d-sm-block">
     <ng-container *ngIf="pageIsIframed; else anchorTemplate">

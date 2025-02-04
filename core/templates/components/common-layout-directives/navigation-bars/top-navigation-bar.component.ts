@@ -571,6 +571,11 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     return this.platformFeatureService.status
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
+  isBlogPostPage(): boolean {
+    return (
+      this.windowRef.nativeWindow.location.pathname.indexOf('/blog/') === -1
+    );
+  }
 }
 
 angular.module('oppia').directive(
