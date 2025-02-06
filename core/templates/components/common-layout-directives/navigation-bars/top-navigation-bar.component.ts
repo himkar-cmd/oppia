@@ -571,6 +571,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     return this.platformFeatureService.status
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
+  // return false for blog page.
   isBlogPostPage(): boolean {
     return (
       this.windowRef.nativeWindow.location.pathname.indexOf('/blog/') === -1
