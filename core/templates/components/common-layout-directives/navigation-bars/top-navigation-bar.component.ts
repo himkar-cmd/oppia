@@ -96,6 +96,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   donateMenuOffset: number = 0;
   ACTION_OPEN!: string;
   ACTION_CLOSE!: string;
+  private backButtonHiddenPaths: string[] = ['/blog/'];
   KEYBOARD_EVENT_TO_KEY_CODES!: {
     enter: {
       shiftKeyIsPressed: boolean;
@@ -572,10 +573,9 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
   // Return false for blog page.
-  isBlogPostPage(): boolean {
-    return (
-      this.windowRef.nativeWindow.location.pathname.indexOf('/blog/') === -1
-    );
+  shouldHideBackButton(): boolean {
+    let currentPath = this.urlService.getPathname();
+    return this.backButtonHiddenPaths.some((path) => currentPath.includes(path));
   }
 }
 
