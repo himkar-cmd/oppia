@@ -1,5 +1,5 @@
 <div class="navbar-header e2e-test-navbar-header oppia-top-navigation-bar">
-  <a *ngIf="windowIsNarrow && !pageIsIframed && isBlogPostPage()"
+  <a *ngIf="windowIsNarrow && !pageIsIframed && !shouldHideBackButton()"
      (click)="toggleSidebar($event)"
      class="navbar-brand oppia-navbar-menu oppia-transition-200 e2e-mobile-test-navbar-button ml-0"
      tabindex="0">
@@ -13,7 +13,7 @@
        &#10005;
     </i>
   </a>
-  <a href="/blog" class="oppia-blog-post-back-button e2e-test-back-button" *ngIf="!isBlogPostPage()">
+  <a href="/blog" class="e2e-test-back-button" *ngIf="shouldHideBackButton()">
     <i class="fas fa-arrow-left oppia-navbar-back-button">
     </i>
   </a>
