@@ -572,11 +572,11 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     return this.platformFeatureService.status
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
-  
+
   // Return false for blog page.
   shouldHideBackButton(): boolean {
     let currentPath = this.urlService.getPathname();
-    return this.backButtonHiddenPaths.some((path) => currentPath.includes(path));
+    return this.backButtonHiddenPaths.some(path => currentPath.includes(path));
   }
 }
 
