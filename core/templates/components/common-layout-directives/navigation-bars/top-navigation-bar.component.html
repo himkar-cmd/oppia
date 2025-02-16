@@ -13,7 +13,7 @@
        &#10005;
     </i>
   </a>
-  <a href="/blog" class="e2e-test-back-button" *ngIf="shouldHideBackButton()">
+  <a [href]="this.navbackButtonUrl" class="e2e-test-back-button" *ngIf="shouldHideBackButton()">
     <i class="fas fa-arrow-left oppia-navbar-back-button">
     </i>
   </a>

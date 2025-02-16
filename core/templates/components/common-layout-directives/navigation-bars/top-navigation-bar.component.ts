@@ -117,6 +117,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   windowIsNarrow: boolean = false;
   profilePicturePngDataUrl!: string;
   profilePictureWebpDataUrl!: string;
+  navbackButtonUrl!: string;
   unreadThreadsCount: number = 0;
   paginatedThreadsList: FeedbackThreadSummaryBackendDict[][] = [];
 
@@ -576,6 +577,13 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   // Return false for blog page.
   shouldHideBackButton(): boolean {
     let currentPath = this.urlService.getPathname();
+    // Find the first matching path from the list of hidden back button paths
+    let path = this.backButtonHiddenPaths.find(backButtonHiddenPath =>
+      currentPath.includes(backButtonHiddenPath)
+    );
+    if (path) {
+      this.navbackButtonUrl = path.substring(0, path.length - 1);
+    }
     return this.backButtonHiddenPaths.some(path => currentPath.includes(path));
   }
 }
