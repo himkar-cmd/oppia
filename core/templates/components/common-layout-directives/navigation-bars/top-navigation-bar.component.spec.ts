@@ -50,6 +50,7 @@ import {LearnerGroupBackendApiService} from 'domain/learner_group/learner-group-
 import {AppConstants} from 'app.constants';
 import {NavbarAndFooterGATrackingPages} from 'app.constants';
 import {UrlInterpolationService} from 'domain/utilities/url-interpolation.service';
+import {UrlService} from 'services/contextual/url.service';
 
 class MockPlatformFeatureService {
   status = {
@@ -109,7 +110,7 @@ describe('TopNavigationBarComponent', () => {
   let i18nService: I18nService;
   let mockPlatformFeatureService = new MockPlatformFeatureService();
   let urlInterpolationService: UrlInterpolationService;
-
+  let urlService = UrlService;
   let threadSummaryList = [
     {
       status: 'open',
@@ -191,6 +192,7 @@ describe('TopNavigationBarComponent', () => {
     searchService = TestBed.inject(SearchService);
     wds = TestBed.inject(WindowDimensionsService);
     userService = TestBed.inject(UserService);
+    urlService = TestBed.inject(UrlService);
     siteAnalyticsService = TestBed.inject(SiteAnalyticsService);
     navigationService = TestBed.inject(NavigationService);
     deviceInfoService = TestBed.inject(DeviceInfoService);
@@ -836,4 +838,12 @@ describe('TopNavigationBarComponent', () => {
       ).toBeTrue();
     }
   );
+  it('should return true and set navbackButtonUrl when current path matches a hidden back button path', () => {
+    spyOn(urlService, 'getPathname').and.returnValue('/blog/post123');
+
+    component.backButtonHiddenPaths = ['/blog/'];
+
+    expect(component.shouldHideBackButton()).toBeTrue();
+    expect(component.navbackButtonUrl).toBe('/blog');
+  });
 });

@@ -577,7 +577,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   // Return false for blog page.
   shouldHideBackButton(): boolean {
     let currentPath = this.urlService.getPathname();
-    // Find the first matching path from the list of hidden back button paths
+    // Find the first matching path from the list of hidden back button paths.
     let path = this.backButtonHiddenPaths.find(backButtonHiddenPath =>
       currentPath.includes(backButtonHiddenPath)
     );
