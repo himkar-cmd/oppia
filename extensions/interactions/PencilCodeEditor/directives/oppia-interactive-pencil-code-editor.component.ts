@@ -165,6 +165,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
     this.pce.on('startExecute', () => {
       hasSubmittedAnswer = false;
     });
+    // This function is created to pass in both 'execute' and also on registerCurrentInteraction.
 
     let submitInteracAnswer = () => {
       if (errorIsHappening || hasSubmittedAnswer) {
