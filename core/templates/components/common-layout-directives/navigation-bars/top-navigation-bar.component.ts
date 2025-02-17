@@ -72,6 +72,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   @Input() subheaderText!: string;
 
   IMPACT_REPORT_LINK = AppConstants.IMPACT_REPORT_LINK;
+  PAGES_WITHOUT_BACK_STATE: string[] = ['/blog/'];
   url!: URL;
   currentLanguageCode!: string;
   supportedSiteLanguages!: LanguageInfo[];
@@ -96,7 +97,6 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   donateMenuOffset: number = 0;
   ACTION_OPEN!: string;
   ACTION_CLOSE!: string;
-  private backButtonHiddenPaths: string[] = ['/blog/'];
   KEYBOARD_EVENT_TO_KEY_CODES!: {
     enter: {
       shiftKeyIsPressed: boolean;
@@ -236,6 +236,14 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     // first save a reference to that context in a variable, and then use that
     // variable in place of the 'this' keyword.
     let that = this;
+
+    let currentPath = this.urlService.getPathname();
+    let backpathUrl = this.PAGES_WITHOUT_BACK_STATE.find(
+      PAGES_WITHOUT_BACK_STATE => currentPath.includes(PAGES_WITHOUT_BACK_STATE)
+    );
+    if (backpathUrl) {
+      this.navbackButtonUrl = backpathUrl.substring(0, backpathUrl.length - 1);
+    }
 
     this.directiveSubscriptions.add(
       this.searchService.onSearchBarLoaded.subscribe(() => {
@@ -574,17 +582,11 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
 
-  // Return false for blog page.
   shouldHideBackButton(): boolean {
     let currentPath = this.urlService.getPathname();
-    // Find the first matching path from the list of hidden back button paths.
-    let path = this.backButtonHiddenPaths.find(backButtonHiddenPath =>
-      currentPath.includes(backButtonHiddenPath)
+    return this.PAGES_WITHOUT_BACK_STATE.some(path =>
+      currentPath.includes(path)
     );
-    if (path) {
-      this.navbackButtonUrl = path.substring(0, path.length - 1);
-    }
-    return this.backButtonHiddenPaths.some(path => currentPath.includes(path));
   }
 }
 

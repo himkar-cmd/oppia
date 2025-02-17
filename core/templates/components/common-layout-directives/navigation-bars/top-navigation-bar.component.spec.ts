@@ -110,7 +110,7 @@ describe('TopNavigationBarComponent', () => {
   let i18nService: I18nService;
   let mockPlatformFeatureService = new MockPlatformFeatureService();
   let urlInterpolationService: UrlInterpolationService;
-  let urlService = UrlService;
+  let urlService: UrlService;
   let threadSummaryList = [
     {
       status: 'open',
@@ -841,9 +841,10 @@ describe('TopNavigationBarComponent', () => {
   it('should return true and set navbackButtonUrl when current path matches a hidden back button path', () => {
     spyOn(urlService, 'getPathname').and.returnValue('/blog/post123');
 
-    component.backButtonHiddenPaths = ['/blog/'];
+    component.PAGES_WITHOUT_BACK_STATE = ['/blog/'];
 
     expect(component.shouldHideBackButton()).toBeTrue();
+    component.ngOnInit();
     expect(component.navbackButtonUrl).toBe('/blog');
   });
 });
