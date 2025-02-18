@@ -112,7 +112,7 @@ describe('TopNavigationBarComponent', () => {
   let mockPlatformFeatureService = new MockPlatformFeatureService();
   let urlInterpolationService: UrlInterpolationService;
   let urlService: UrlService;
-  let location: Location;
+  let locations: Location;
   let threadSummaryList = [
     {
       status: 'open',
@@ -201,8 +201,8 @@ describe('TopNavigationBarComponent', () => {
     deviceInfoService = TestBed.inject(DeviceInfoService);
     sidebarStatusService = TestBed.inject(SidebarStatusService);
     i18nService = TestBed.inject(I18nService);
-    location = TestBed.inject(Location);
-    spyOn(location, 'back').and.stub();
+    locations = TestBed.inject(Location);
+    spyOn(locations, 'back').and.stub();
     feedbackUpdatesBackendApiService = TestBed.inject(
       FeedbackUpdatesBackendApiService
     );
@@ -851,6 +851,6 @@ describe('TopNavigationBarComponent', () => {
   });
   it('should navigate back when goBack is called', () => {
     component.goBack();
-    expect(location.back).toHaveBeenCalled();
+    expect(locations.back).toHaveBeenCalled();
   });
 });

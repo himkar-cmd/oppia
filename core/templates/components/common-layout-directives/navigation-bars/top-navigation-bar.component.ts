@@ -192,7 +192,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     private platformFeatureService: PlatformFeatureService,
     private learnerGroupBackendApiService: LearnerGroupBackendApiService,
     private languageBannerService: LanguageBannerService,
-    private location: Location
+    private locations: Location
   ) {}
 
   ngOnInit(): void {
@@ -584,7 +584,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.location.back();
+    this.locations.back();
   }
 }
 
