@@ -843,8 +843,6 @@ describe('TopNavigationBarComponent', () => {
 
     component.PAGES_WITHOUT_BACK_STATE = ['/blog/'];
 
-    expect(component.shouldHideBackButton()).toBeTrue();
-    component.ngOnInit();
-    expect(component.navbackButtonUrl).toBe('/blog');
+    expect(component.shouldHideBackButton()).toBeFalse();
   });
 });

@@ -52,6 +52,8 @@ import {FeedbackUpdatesBackendApiService} from 'domain/feedback_updates/feedback
 import {FeedbackThreadSummaryBackendDict} from 'domain/feedback_thread/feedback-thread-summary.model';
 import {LanguageBannerService} from 'components/language-banner/language-banner.service';
 
+import {Location} from '@angular/common';
+
 import './top-navigation-bar.component.css';
 
 interface LanguageInfo {
@@ -117,7 +119,6 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   windowIsNarrow: boolean = false;
   profilePicturePngDataUrl!: string;
   profilePictureWebpDataUrl!: string;
-  navbackButtonUrl!: string;
   unreadThreadsCount: number = 0;
   paginatedThreadsList: FeedbackThreadSummaryBackendDict[][] = [];
 
@@ -190,7 +191,8 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     private focusManagerService: FocusManagerService,
     private platformFeatureService: PlatformFeatureService,
     private learnerGroupBackendApiService: LearnerGroupBackendApiService,
-    private languageBannerService: LanguageBannerService
+    private languageBannerService: LanguageBannerService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -236,14 +238,6 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     // first save a reference to that context in a variable, and then use that
     // variable in place of the 'this' keyword.
     let that = this;
-
-    let currentPath = this.urlService.getPathname();
-    let backpathUrl = this.PAGES_WITHOUT_BACK_STATE.find(
-      PAGES_WITHOUT_BACK_STATE => currentPath.includes(PAGES_WITHOUT_BACK_STATE)
-    );
-    if (backpathUrl) {
-      this.navbackButtonUrl = backpathUrl.substring(0, backpathUrl.length - 1);
-    }
 
     this.directiveSubscriptions.add(
       this.searchService.onSearchBarLoaded.subscribe(() => {
@@ -584,9 +578,13 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
 
   shouldHideBackButton(): boolean {
     let currentPath = this.urlService.getPathname();
-    return this.PAGES_WITHOUT_BACK_STATE.some(path =>
+    return !this.PAGES_WITHOUT_BACK_STATE.some(path =>
       currentPath.includes(path)
     );
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
 
