@@ -584,7 +584,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.locations.back();
+    this.location.back();
   }
 }
 
