@@ -82,7 +82,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
       year: '2022',
     },
   ];
-  PAGES_WITHOUT_BACK_STATE: string[] = ['/blog/'];
+  PAGES_WITH_BACK_STATE: string[] = ['/blog/'];
   url!: URL;
   currentLanguageCode!: string;
   supportedSiteLanguages!: LanguageInfo[];
@@ -200,7 +200,7 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
     private platformFeatureService: PlatformFeatureService,
     private learnerGroupBackendApiService: LearnerGroupBackendApiService,
     private languageBannerService: LanguageBannerService,
-    private locations: Location
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -584,14 +584,12 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
       .ShowFeedbackUpdatesInProfilePicDropdownMenu.isEnabled;
   }
 
-  shouldHideBackButton(): boolean {
-    let currentPath = this.urlService.getPathname();
-    return !this.PAGES_WITHOUT_BACK_STATE.some(path =>
-      currentPath.includes(path)
-    );
+  shouldShowBackButton(): boolean {
+    let currentPath = this.location.path();
+    return this.PAGES_WITH_BACK_STATE.some(path => currentPath.includes(path));
   }
 
   goBack(): void {
-    this.locations.back();
+    this.location.back();
   }
 }

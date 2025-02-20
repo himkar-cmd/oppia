@@ -1,5 +1,5 @@
 <div class="navbar-header e2e-test-navbar-header oppia-top-navigation-bar">
-  <a *ngIf="windowIsNarrow && !pageIsIframed && shouldHideBackButton()"
+  <a *ngIf="windowIsNarrow && !pageIsIframed && !shouldShowBackButton()"
      (click)="toggleSidebar($event)"
      class="navbar-brand oppia-navbar-menu oppia-transition-200 e2e-mobile-test-navbar-button ml-0"
      tabindex="0">
@@ -13,7 +13,7 @@
        &#10005;
     </i>
   </a>
-  <a (click)="goBack()" class="e2e-test-back-button" *ngIf="!shouldHideBackButton()">
+  <a (click)="goBack()" class="e2e-test-back-button" *ngIf="shouldShowBackButton()">
     <i class="fas fa-arrow-left oppia-navbar-back-button">
     </i>
   </a>

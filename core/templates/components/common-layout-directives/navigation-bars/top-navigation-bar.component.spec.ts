@@ -50,7 +50,6 @@ import {LearnerGroupBackendApiService} from 'domain/learner_group/learner-group-
 import {AppConstants} from 'app.constants';
 import {NavbarAndFooterGATrackingPages} from 'app.constants';
 import {UrlInterpolationService} from 'domain/utilities/url-interpolation.service';
-import {UrlService} from 'services/contextual/url.service';
 import {Location} from '@angular/common';
 
 class MockPlatformFeatureService {
@@ -111,8 +110,7 @@ describe('TopNavigationBarComponent', () => {
   let i18nService: I18nService;
   let mockPlatformFeatureService = new MockPlatformFeatureService();
   let urlInterpolationService: UrlInterpolationService;
-  let urlService: UrlService;
-  let locations: Location;
+  let location: Location;
   let threadSummaryList = [
     {
       status: 'open',
@@ -195,14 +193,13 @@ describe('TopNavigationBarComponent', () => {
     searchService = TestBed.inject(SearchService);
     wds = TestBed.inject(WindowDimensionsService);
     userService = TestBed.inject(UserService);
-    urlService = TestBed.inject(UrlService);
     siteAnalyticsService = TestBed.inject(SiteAnalyticsService);
     navigationService = TestBed.inject(NavigationService);
     deviceInfoService = TestBed.inject(DeviceInfoService);
     sidebarStatusService = TestBed.inject(SidebarStatusService);
     i18nService = TestBed.inject(I18nService);
-    locations = TestBed.inject(Location);
-    spyOn(locations, 'back').and.stub();
+    location = TestBed.inject(Location);
+    spyOn(location, 'back').and.stub();
     feedbackUpdatesBackendApiService = TestBed.inject(
       FeedbackUpdatesBackendApiService
     );
@@ -844,13 +841,13 @@ describe('TopNavigationBarComponent', () => {
     }
   );
   it('should return true and set navbackButtonUrl when current path matches a hidden back button path', () => {
-    spyOn(urlService, 'getPathname').and.returnValue('/blog/post123');
-    component.PAGES_WITHOUT_BACK_STATE = ['/blog/'];
+    spyOn(location, 'path').and.returnValue('/blog/post123');
+    component.PAGES_WITH_BACK_STATE = ['/blog/'];
 
-    expect(component.shouldHideBackButton()).toBeFalse();
+    expect(component.shouldShowBackButton()).toBeTrue();
   });
   it('should navigate back when goBack is called', () => {
     component.goBack();
-    expect(locations.back).toHaveBeenCalled();
+    expect(location.back).toHaveBeenCalled();
   });
 });
