@@ -72,8 +72,6 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
   @Input() headerText!: string;
   @Input() subheaderText!: string;
 
-
-  IMPACT_REPORT_LINK = AppConstants.IMPACT_REPORT_LINK;
   impactReports = [
     {
       link: AppConstants.IMPACT_REPORT_LINK_2023,
@@ -84,7 +82,6 @@ export class TopNavigationBarComponent implements OnInit, OnDestroy {
       year: '2022',
     },
   ];
-
   PAGES_WITHOUT_BACK_STATE: string[] = ['/blog/'];
   url!: URL;
   currentLanguageCode!: string;
