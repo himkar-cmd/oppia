@@ -40,7 +40,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   // code. It can be `undefined` if no previous answer exists.
   // - When the component is first initialized, `lastAnswer` is always `null`.
   // - When re-initialized while adding solution, `lastAnswer` become `undefined`.
-  @Input() lastAnswer: {code: string} | null;
+  @Input() lastAnswer!: {code: string} | null;
   // These properties are initialized using Angular lifecycle hooks
   // and we need to do non-null assertion. For more information, see
   // https://github.com/oppia/oppia/wiki/Guide-on-defining-types#ts-7-1
