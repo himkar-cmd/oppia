@@ -38,9 +38,9 @@ import {Subscription} from 'rxjs';
 export class PencilCodeEditor implements OnInit, OnDestroy {
   // `lastAnswer` is an optional input property (`?`) that stores the last submitted
   // code. It can be `undefined` if no previous answer exists.
-  // - When the component is first initialized, `lastAnswer` might be `null`.
-  // - When re-initialized while adding a solution, `lastAnswer` might be `undefined`.
-  @Input() lastAnswer?: {code: string};
+  // - When the component is first initialized, `lastAnswer` is always `null`.
+  // - When re-initialized while adding solution, `lastAnswer` become `undefined`.
+  @Input() lastAnswer: {code: string} | null;
   // These properties are initialized using Angular lifecycle hooks
   // and we need to do non-null assertion. For more information, see
   // https://github.com/oppia/oppia/wiki/Guide-on-defining-types#ts-7-1
@@ -100,19 +100,27 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       })
     );
 
-    let iframeElements = this.elementRef.nativeElement.querySelectorAll(
-      '.pencil-code-editor-iframe'
-    );
-
     // The iframe may not be available immediately due to asynchronous rendering.
     // This happens when the component initializes before the Pencil Code iframe
     // is fully rendered in the DOM. In such cases, we exit early to prevent errors.
-    if (iframeElements.length > 0) {
-      this.iframeDiv = iframeElements[0] as HTMLElement;
-      this.pce = new PencilCodeEmbed(this.iframeDiv);
-    } else {
-      return;
-    }
+    const maxRetries = 10;
+    let retryCount = 0;
+
+    const checkIframe = () => {
+      let iframeElements = this.elementRef.nativeElement.querySelectorAll(
+        '.pencil-code-editor-iframe'
+      );
+
+      if (iframeElements.length > 0) {
+        this.iframeDiv = iframeElements[0] as HTMLElement;
+        this.pce = new PencilCodeEmbed(this.iframeDiv);
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(checkIframe, 200);
+      }
+    };
+
+    checkIframe();
 
     this.interactionIsActive = !this.lastAnswer;
 
@@ -172,11 +180,9 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
     this.pce.on('startExecute', () => {
       hasSubmittedAnswer = false;
     });
-    // This function is created to pass in both 'execute' and also on registerCurrentInteraction().
 
-    // This function handles submitting the user's code execution result.
-    // It is passed to both `execute` and `registerCurrentInteraction()`
-    // to ensure that submission logic remains consistent.
+    // Handles submission of the user's code execution result.
+    // Used in both 'execute' and 'registerCurrentInteraction()' to ensure consistency.
 
     let submitInteractionAnswer = () => {
       // Prevents submission if an error has occurred or an answer has already been submitted.
@@ -194,7 +200,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
           // Normalize the user's inputted code (e.g., replace tabs with spaces).
           let normalizedCode = this.getNormalizedCode();
 
-          // Extracts all div elements from the executed output to get the textual content.
+          // Extract all div elements from the executed output to get the textual content.
           let temp = document.createElement('div');
 
           // `pencilCodeHtml` is a string representing the raw HTML content inside
@@ -219,15 +225,15 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
           // which handles storing the response and validating it against rules.
           this.currentInteractionService.onSubmit(
             {
-              code: normalizedCode, // User's code
-              output: output || '', // Extracted textual output from execution
-              evaluation: '', // Placeholder for evaluation (not used here)
-              error: '', // Placeholder for errors (not used here)
+              code: normalizedCode,
+              output: output || '',
+              evaluation: '',
+              error: '',
             },
             this.pencilCodeEditorRulesService
           );
         },
-        true // Execute evaluation within the iframe context.
+        true
       );
     };
 
