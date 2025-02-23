@@ -135,7 +135,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       ) as PencilCodeEditorCustomizationArgs;
     this.someInitialCode = this.interactionIsActive
       ? initialCode.value
-      : this.lastAnswer.code;
+      : this.lastAnswer?.code || '';
 
     this.pce.beginLoad(this.someInitialCode);
     this.pce.on('load', () => {
