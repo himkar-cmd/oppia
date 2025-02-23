@@ -48,7 +48,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   someInitialCode!: string;
   interactionIsActive: boolean = false;
   directiveSubscriptions = new Subscription();
-  failToLoadPencilCodeEditor: boolean = false;
+  isPencilCodeEditorLoaded: boolean = false;
 
   constructor(
     private currentInteractionService: CurrentInteractionService,
@@ -90,7 +90,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Ensure lastAnswer is never undefined
+    // Ensure lastAnswer is never undefined.
     this.lastAnswer = this.lastAnswer ?? null;
     this.directiveSubscriptions.add(
       this.playerPositionService.onNewCardAvailable.subscribe(() => {
@@ -120,7 +120,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
         retryCount++;
         setTimeout(checkIframe, 200);
       } else {
-        this.failToLoadPencilCodeEditor = true;
+        this.isPencilCodeEditorLoaded = true;
       }
     };
 
@@ -135,9 +135,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       ) as PencilCodeEditorCustomizationArgs;
     this.someInitialCode = this.interactionIsActive
       ? initialCode.value
-      : this.lastAnswer
-        ? this.lastAnswer.code
-        : initialCode.value;
+      : this.lastAnswer.code;
 
     this.pce.beginLoad(this.someInitialCode);
     this.pce.on('load', () => {
@@ -238,7 +236,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
             this.pencilCodeEditorRulesService
           );
         },
-        // Execute evaluation within the iframe context
+        // Execute evaluation within the iframe context.
         true
       );
     };
