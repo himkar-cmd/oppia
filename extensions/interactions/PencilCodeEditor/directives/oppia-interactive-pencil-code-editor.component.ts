@@ -36,11 +36,9 @@ import {Subscription} from 'rxjs';
   templateUrl: './pencil-code-editor-interaction.component.html',
 })
 export class PencilCodeEditor implements OnInit, OnDestroy {
-  // `lastAnswer` is an optional input property (`?`) that stores the last submitted
-  // code. It can be `undefined` if no previous answer exists.
-  // - When the component is first initialized, `lastAnswer` is always `null`.
-  // - When re-initialized while adding solution, `lastAnswer` become `undefined`.
-  @Input() lastAnswer!: {code: string} | null;
+  // `lastAnswer` stores the last submitted code and is always `{code: string} | null`.
+  // - It is `null` if no previous answer exists.
+  @Input() lastAnswer: {code: string} | null = null;
   // These properties are initialized using Angular lifecycle hooks
   // and we need to do non-null assertion. For more information, see
   // https://github.com/oppia/oppia/wiki/Guide-on-defining-types#ts-7-1
@@ -50,6 +48,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   someInitialCode!: string;
   interactionIsActive: boolean = false;
   directiveSubscriptions = new Subscription();
+  failToLoadPencilCodeEditor: boolean = false;
 
   constructor(
     private currentInteractionService: CurrentInteractionService,
@@ -91,6 +90,8 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Ensure lastAnswer is never undefined
+    this.lastAnswer = this.lastAnswer ?? null;
     this.directiveSubscriptions.add(
       this.playerPositionService.onNewCardAvailable.subscribe(() => {
         this.interactionIsActive = false;
@@ -100,9 +101,10 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       })
     );
 
-    // The iframe may not be available immediately due to asynchronous rendering.
-    // This happens when the component initializes before the Pencil Code iframe
-    // is fully rendered in the DOM. In such cases, we exit early to prevent errors.
+    // The iframe may not be immediately available due to asynchronous rendering.
+    // To handle this, we retry checking for its presence up to `maxRetries` times.
+    // If the iframe does not appear within the retry limit, we display an error message.
+
     const maxRetries = 10;
     let retryCount = 0;
 
@@ -117,12 +119,14 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       } else if (retryCount < maxRetries) {
         retryCount++;
         setTimeout(checkIframe, 200);
+      } else {
+        this.failToLoadPencilCodeEditor = true;
       }
     };
 
     checkIframe();
 
-    this.interactionIsActive = !this.lastAnswer;
+    this.interactionIsActive = this.lastAnswer === null;
 
     const {initialCode} =
       this.interactionAttributesExtractorService.getValuesFromAttributes(
@@ -131,7 +135,9 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
       ) as PencilCodeEditorCustomizationArgs;
     this.someInitialCode = this.interactionIsActive
       ? initialCode.value
-      : this.lastAnswer?.code || '';
+      : this.lastAnswer
+        ? this.lastAnswer.code
+        : initialCode.value;
 
     this.pce.beginLoad(this.someInitialCode);
     this.pce.on('load', () => {
@@ -183,7 +189,6 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
 
     // Handles submission of the user's code execution result.
     // Used in both 'execute' and 'registerCurrentInteraction()' to ensure consistency.
-
     let submitInteractionAnswer = () => {
       // Prevents submission if an error has occurred or an answer has already been submitted.
       if (errorIsHappening || hasSubmittedAnswer) {
@@ -233,6 +238,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
             this.pencilCodeEditorRulesService
           );
         },
+        // Execute evaluation within the iframe context
         true
       );
     };

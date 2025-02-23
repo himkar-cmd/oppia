@@ -2,6 +2,9 @@
   <div class="pencil-code-editor-iframe oppia-pencil-code-editor-iframe">
     <div></div>
   </div>
+  <div class="oppia-error-message-container" *ngIf="failToLoadPencilCodeEditor">
+    Failed to load the editor. Please try refreshing.
+</div>
   <div class="oppia-reset-code-button-container">
     <button mat-button class="oppia-reset-code-text"
             (click)="reset()"
@@ -30,6 +33,11 @@
   .oppia-reset-code-text:hover {
     background-color: #f5f5f5;
   }
+  .oppia-error-message-container {
+    color: red;
+    padding: 10px;
+    margin-top: 10px;
+}
 
   @media screen and (max-width: 959px) {
     .pencil-code-editor-container {
