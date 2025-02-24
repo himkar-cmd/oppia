@@ -36,8 +36,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './pencil-code-editor-interaction.component.html',
 })
 export class PencilCodeEditor implements OnInit, OnDestroy {
-  // `lastAnswer` stores the last submitted code and is always `{code: string} | null`.
-  // - It is `null` if no previous answer exists.
+  // `lastAnswer` stores the last submitted code and is always `{code: string} | null`. It is `null` if no previous answer exists.
   @Input() lastAnswer: {code: string} | null = null;
   // These properties are initialized using Angular lifecycle hooks
   // and we need to do non-null assertion. For more information, see
@@ -48,7 +47,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
   someInitialCode!: string;
   interactionIsActive: boolean = false;
   directiveSubscriptions = new Subscription();
-  isPencilCodeEditorLoaded: boolean = false;
+  pencilCodeEditorIsLoaded: boolean = false;
 
   constructor(
     private currentInteractionService: CurrentInteractionService,
@@ -120,7 +119,7 @@ export class PencilCodeEditor implements OnInit, OnDestroy {
         retryCount++;
         setTimeout(checkIframe, 200);
       } else {
-        this.isPencilCodeEditorLoaded = true;
+        this.pencilCodeEditorIsLoaded = true;
       }
     };
 
